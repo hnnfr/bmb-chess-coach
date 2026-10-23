@@ -1,6 +1,6 @@
 ---
 title: 'Module Plan'
-status: 'ideation'
+status: 'complete'
 module_name: 'Chess Coach'
 module_code: 'cch'
 module_description: 'A persistent personal chess coach that uses python-chess and a local Stockfish engine for ground-truth analysis, and an LLM to turn that analysis into human coaching.'
@@ -10,7 +10,7 @@ expands_module: ''
 skills_planned: ['cch-agent-coach']
 config_variables: []
 created: '2026-10-21'
-updated: '2026-10-21'
+updated: '2026-10-23'
 ---
 
 # Module Plan
@@ -85,7 +85,7 @@ Not applicable — single-agent module, no cross-agent handoff.
 | **Targeted Exercises** | Generates drills sourced from the player's *own* mistakes — positions right after a real critical moment, asking the player to find the engine-approved move/plan, graded against engine truth | A specific game's mistakes, or the curated `weaknesses.md` library | A set of custom exercises (reuses the board artifact from Game Analysis where useful) |
 | **Flexible Training Plan** | A self-paced plan that adapts to irregular availability — no calendar/weekly assumption. Checks in on what was actually done and adjusts rather than issuing a fixed weekly schedule | Current `weaknesses.md` + `repertoire.md` state; player's stated available time/sessions; prior plan completion status | Updates `training-plan.md`; a plan of recommended next focus areas/exercises |
 | **Tournament Prep** | Prep against a specific upcoming opponent — pulls their public games, surfaces their repertoire tendencies and holes, cross-references against the player's own `repertoire.md` | Opponent's chess.com username (reuses Game Fetch internals) | A prep report (**good HTML comparison-report candidate**: opponent tendencies vs. player's repertoire, highlighted gaps to exploit) |
-| **Coach Self-Calibration** | The two-way improvement loop: reviews accumulated player feedback across all other capabilities and distills it into calibration notes that reshape how Jonathan approaches future analysis, diagnosis, and exercises | Accumulated raw entries in `feedback.md`; optionally a direct player prompt ("here's what's been bugging me about your reports") | Updated calibration-notes section of `feedback.md`; a short "here's what I'm adjusting" reflection back to the player |
+| **Coach Self-Calibration** | The two-way improvement loop: reviews accumulated player feedback across all other capabilities and distills it into calibration notes that reshape how Jonathan approaches future analysis, diagnosis, and exercises | **Auto-triggered** once N new raw entries have accumulated in `feedback.md` since the last calibration pass (not manually invoked by player or coach) | Updated calibration-notes section of `feedback.md`; a short "here's what I'm adjusting" reflection surfaced to the player right after the triggering piece of feedback |
 
 <!-- Legendary-game study and custom/ad-hoc PGN analysis are intentionally NOT separate capabilities — they're input-source variants of Game Analysis (confirmed by user). -->
 
@@ -107,6 +107,7 @@ Not applicable — single-agent module, no cross-agent handoff.
 - Game Fetch's explicit date-range control (vs. blind full sync) is a trust feature the player asked for directly — don't design around auto-syncing everything.
 - The interactive-replay board and the deep written report may end up as one unified artifact (an HTML page that's both clickable/interactive AND contains the deep per-turning-point prose) rather than two separate deliverables — flagged as a build-time design option, not decided here.
 - **Feedback collection is cross-cutting, not a standalone user-facing capability.** Every other capability's output should close with a lightweight invitation to rate/comment (logged as a raw entry in `feedback.md`); Coach Self-Calibration is the capability that actually reviews and distills those entries into behavior-shaping notes. Don't make the player manually "invoke feedback" after every single output — that would be friction that kills the habit.
+- **Self-Calibration triggers automatically**, not on player/coach request — once N new raw feedback entries have accumulated since the last pass. A default of N=5 is a reasonable starting point for the builder to tune; this threshold is an internal behavior detail, not a setup-time config question (config was deliberately kept minimal per the user).
 
 **Relationships:** Game Fetch feeds Game Analysis, Weakness Diagnosis, and Tournament Prep. Weakness Diagnosis feeds Exercises and Training Plan (though Exercises can also draw directly from a single game's mistakes without going through the curated library). Opening Repertoire Work and Tournament Prep both read/write `repertoire.md`. Every capability feeds raw entries into `feedback.md`; Coach Self-Calibration reads that log and its distilled calibration notes are read back by every other capability on activation — the one deliberately cyclical relationship in the module. No hard ordering beyond natural data dependencies — can't diagnose before games are fetched/analyzed; can't build exercises from a library that doesn't exist yet (but can always build them from one fresh analyzed game).
 
@@ -143,11 +144,29 @@ Likely shape: an HTML artifact embedding a lightweight board renderer driven by 
 
 ## Integration
 
-Not ready — complete in Phase 3+
+**Standalone.** Provides complete, independent value — a club player installs the module, points it at their own chess.com account and a local Stockfish binary, and gets a full personal coaching relationship with no dependency on any other BMad module. Not an expansion of anything.
 
 ## Creative Use Cases
 
-Not ready — complete in Phase 3+
+- **Historical anchoring:** when a player's loss shares a structure/motif with a legendary game in the bundled DB (e.g. "you had the same kind of bad bishop Tal had in his 1960 brilliancy, here's how he solved it"), Jonathan cross-references `weaknesses.md` against the legendary-game set — turning Game Analysis's input-source flexibility into an actual teaching device, not just a convenience.
+- **Pre-round one-pager:** Tournament Prep's HTML report used literally at the board before a game — quick scan of an opponent's tendencies right before sitting down.
+- **Long-term trend view:** because `game-log.md` and `weaknesses.md` accumulate over months, a player could ask "how has my queen-bishop battery performance evolved since spring?" — turning the memory itself into a longitudinal progress view, not just a snapshot.
+- **The coach's journal:** since `feedback.md`'s calibration notes are just a readable file, a curious player could ask Jonathan to show what he's learned about coaching them specifically — meta-transparency that reinforces trust in the whole feedback loop.
+- **Community adoption:** because config is minimal (chess.com username, rating, goals) and the module is self-contained, a whole chess club could each install their own independent instance pointed at their own account — no shared infrastructure needed, each player gets their own Jonathan.
+
+## Build Roadmap
+
+Since this is a single-skill module, the "roadmap" is about build order for capabilities **within** `cch-agent-coach`, not ordering across skills.
+
+1. **Foundation** — persona, memory scaffold (`index.md` + empty curated files), setup-time config (username/rating/goals), Stockfish/python-chess tool plumbing. Nothing else works without this.
+2. **Game Fetch** — minimal viable: pull by date range from chess.com. Needed to get any real games into the system (plus manual PGN paste as an immediate fallback so analysis can be tested without it).
+3. **Game Analysis** — the true MVP and the capability that must clear the "better than chess.com Game Review" bar before anything else matters. Both delivery modes (interactive board replay, written report) belong here. Get this right first — it's the flagship and everything else either depends on its output or is lower-risk to add later.
+4. **Weakness Diagnosis** — the user's own stated MVP stretch-goal; needs a batch of analyzed games to be meaningful, so naturally follows once #3 is solid and some games have accumulated in `game-log.md`.
+5. **Targeted Exercises** — depends on diagnosed weaknesses or at minimum one analyzed game's mistakes.
+6. **Opening Repertoire Work** — largely independent of the above; can slot in whenever, sequenced here because the user prioritized analysis/diagnosis first.
+7. **Flexible Training Plan** — depends on `weaknesses.md` and `repertoire.md` existing to have anything meaningful to plan around.
+8. **Tournament Prep** — reuses Game Fetch, Game Analysis, and `repertoire.md`; best built once those are proven.
+9. **Coach Self-Calibration** — needs feedback entries to have accumulated from the other capabilities already being used, so it's naturally last — and arguably the one to revisit/tune after real usage rather than getting it perfect upfront.
 
 ## Ideas Captured
 
