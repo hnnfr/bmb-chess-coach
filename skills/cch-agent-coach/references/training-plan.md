@@ -1,7 +1,7 @@
 ---
 name: training-plan
 description: A self-paced training plan that adapts to irregular availability, with no calendar assumption
-code: FT
+code: TP
 added: 2026-10-23
 type: prompt
 ---
