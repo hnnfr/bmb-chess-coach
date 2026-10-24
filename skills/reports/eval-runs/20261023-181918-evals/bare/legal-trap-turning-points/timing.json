@@ -1,0 +1,15 @@
+{
+  "case_id": "legal-trap-turning-points",
+  "config": "bare",
+  "status": "error",
+  "elapsed_s": 0.499,
+  "return_code": 3221226505,
+  "transcript_source": "stdout",
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "total_tokens": 0,
+  "tokens_reported": false,
+  "total_steps": 0,
+  "total_tool_calls": 0,
+  "captured_at": "2026-10-23T16:19:18Z"
+}

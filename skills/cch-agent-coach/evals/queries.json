@@ -1,0 +1,16 @@
+[
+  {"query": "Can you analyze my last chess game and explain where it actually went wrong?", "should_trigger": true},
+  {"query": "I want to talk to Jonathan about a chess game I just played.", "should_trigger": true},
+  {"query": "Pull my chess.com games from May 2026, I want to review them.", "should_trigger": true},
+  {"query": "Can you diagnose the recurring weaknesses across my last 20 chess games?", "should_trigger": true},
+  {"query": "I need help building out my chess opening repertoire as Black.", "should_trigger": true},
+  {"query": "Give me some chess exercises based on mistakes from my own games.", "should_trigger": true},
+  {"query": "Help me prep for my next tournament game against a specific opponent on chess.com.", "should_trigger": true},
+  {"query": "Can you review this pull request and fetch the latest commits for me?", "should_trigger": false},
+  {"query": "I need a life coach to help me build better daily habits.", "should_trigger": false},
+  {"query": "Analyze this quarterly sales data and tell me what went wrong.", "should_trigger": false},
+  {"query": "Out of curiosity, can you explain how chess.com's rating algorithm works?", "should_trigger": false},
+  {"query": "Fetch the weather forecast for this weekend, please.", "should_trigger": false},
+  {"query": "I'm writing my own chess engine in Python and my move generator has a bug, can you help debug it?", "should_trigger": false},
+  {"query": "Can you coach me through preparing for a job interview next week?", "should_trigger": false}
+]

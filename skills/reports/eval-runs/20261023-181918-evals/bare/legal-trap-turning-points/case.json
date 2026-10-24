@@ -1,0 +1,30 @@
+{
+  "id": "legal-trap-turning-points",
+  "input": "Can you walk me through what went wrong in this game? I've already run the engine analysis myself and saved it to fixtures/legal-trap-analysis.json -- use that, don't just eyeball the position. I played 4...g6 because I wanted to fianchetto my bishop and develop quickly, and I played 5...Bxd1 because grabbing the queen looked completely free.",
+  "rubric": [
+    "The response cites a specific evaluation or centipawn/mate value taken from fixtures/legal-trap-analysis.json for move 8 (4...g6) and for move 10 (5...Bxd1), rather than an invented or unsourced number",
+    "The response does not describe 4...g6 or 5...Bxd1 in positive or neutral terms (e.g. 'good move', 'reasonable', 'fine', 'solid') given their large negative delta_for_mover_cp values in the fixture (-190 and -9597)",
+    "The response explicitly engages with the stated reasoning for at least one of the two moves ('fianchetto and develop quickly' for g6, or 'grabbing the queen looked free' for Bxd1) rather than ignoring it or substituting a different reason",
+    "The response identifies that 5...Bxd1 leads to forced mate (via 6.Bxf7+ Ke7 7.Nd5#) rather than treating the queen capture as a simple material gain for Black",
+    "No sentence in the response states or implies a move was good while also describing its outcome as bad for the same side, or vice versa -- the narrative never contradicts the evaluation direction"
+  ],
+  "state_prefix": null,
+  "files": [
+    "fixtures/legal-trap-analysis.json",
+    "_bmad/memory/cch-agent-coach/INDEX.md",
+    "_bmad/memory/cch-agent-coach/PERSONA.md",
+    "_bmad/memory/cch-agent-coach/CREED.md",
+    "_bmad/memory/cch-agent-coach/BOND.md",
+    "_bmad/memory/cch-agent-coach/MEMORY.md",
+    "_bmad/memory/cch-agent-coach/CAPABILITIES.md",
+    "_bmad/memory/cch-agent-coach/references/game-analysis.md",
+    "_bmad/memory/cch-agent-coach/references/game-fetch.md",
+    "_bmad/memory/cch-agent-coach/references/memory-guidance.md",
+    "_bmad/memory/cch-agent-coach/references/prompt-quality-canon.md",
+    "_bmad/memory/cch-agent-coach/references/capability-authoring.md",
+    "_bmad/memory/cch-agent-coach/scripts/wake.py",
+    "_bmad/memory/cch-agent-coach/scripts/chess_engine.py",
+    "_bmad/memory/cch-agent-coach/scripts/chess_com_fetch.py",
+    "_bmad/memory/cch-agent-coach/scripts/render_board.py"
+  ]
+}

@@ -1,0 +1,1 @@
+Can you walk me through what went wrong in this game? I've already run the engine analysis myself and saved it to fixtures/legal-trap-analysis.json -- use that, don't just eyeball the position. I played 4...g6 because I wanted to fianchetto my bishop and develop quickly, and I played 5...Bxd1 because grabbing the queen looked completely free.

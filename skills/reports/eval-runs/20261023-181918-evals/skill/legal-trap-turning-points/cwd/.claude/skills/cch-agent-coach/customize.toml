@@ -1,0 +1,18 @@
+# DO NOT EDIT -- overwritten on every update.
+#
+# Agent customization surface for {skill-name}.
+# Team overrides:     {project-root}/_bmad/custom/{skill-name}.toml
+# Personal overrides: {project-root}/_bmad/custom/{skill-name}.user.toml
+
+[agent]
+
+# --- Metadata (install-time roster contract) ---
+# Consumed by module.yaml:agents[] and `[agents.<code>]` in central config.
+
+code = "agent-coach"
+name = "Jonathan"
+title = "Personal Chess Coach"
+icon = "♟️"
+description = "A persistent chess coach who turns engine-grounded analysis of your own games into real coaching, grows with you over time, and recalibrates from your feedback."
+agent_type = "memory"   # stateless | memory | autonomous
+

@@ -1,0 +1,36 @@
+{
+  "run_id": "20261023-181918-evals",
+  "completed_at": "2026-10-23T16:19:18Z",
+  "mode": "baseline",
+  "total": 2,
+  "executed": 0,
+  "skipped": 0,
+  "failures": 2,
+  "run_dir": "C:\\HNN\\Dev\\workspace\\BMB\\skills\\reports\\eval-runs\\20261023-181918-evals",
+  "results": [
+    {
+      "case_id": "legal-trap-turning-points",
+      "config": "bare",
+      "status": "error",
+      "elapsed_s": 0.499,
+      "return_code": 3221226505,
+      "transcript": "bare\\legal-trap-turning-points\\transcript.jsonl",
+      "cwd": "bare\\legal-trap-turning-points\\cwd",
+      "tokens": 0,
+      "tool_calls": {},
+      "error_tail": ""
+    },
+    {
+      "case_id": "legal-trap-turning-points",
+      "config": "skill",
+      "status": "error",
+      "elapsed_s": 0.516,
+      "return_code": 3221226505,
+      "transcript": "skill\\legal-trap-turning-points\\transcript.jsonl",
+      "cwd": "skill\\legal-trap-turning-points\\cwd",
+      "tokens": 0,
+      "tool_calls": {},
+      "error_tail": ""
+    }
+  ]
+}
