@@ -1,0 +1,26 @@
+{
+  "name": "cch",
+  "owner": {
+    "name": ""
+  },
+  "license": "MIT License",
+  "homepage": "https://github.com/hnnfr/bmb-chess-coach",
+  "repository": "https://github.com/hnnfr/bmb-chess-coach",
+  "keywords": [
+    "bmad"
+  ],
+  "plugins": [
+    {
+      "name": "cch",
+      "source": "./",
+      "description": "A persistent chess coach who turns engine-grounded analysis of your own games into real coaching, grows with you over time, and recalibrates from your feedback.",
+      "version": "1.0.0",
+      "author": {
+        "name": "NGUYEN Hong Nam"
+      },
+      "skills": [
+        "./cch-agent-coach"
+      ]
+    }
+  ]
+}
