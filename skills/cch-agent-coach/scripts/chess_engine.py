@@ -30,6 +30,7 @@ Exit codes: 0 = analyzed, 1 = engine/analysis error, 2 = usage error,
 
 import argparse
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -40,6 +41,39 @@ import chess.pgn
 
 MATE_SCORE_CP = 10000
 
+# Parent directories worth a quick glob before giving up and asking the
+# player directly. Official Stockfish builds ship under a versioned filename
+# (e.g. "stockfish-windows-x86-64-avx2.exe"), never a fixed "stockfish.exe",
+# and the player may well have installed it somewhere of their own choosing
+# (not Program Files) -- so this is a best-effort pass, not a substitute for
+# asking. depth=2 covers both "<dir>/stockfish*.exe" and the common
+# one-folder-nesting a zip extraction leaves behind.
+_CANDIDATE_DIRS = [
+    Path("/usr/local/bin"),
+    Path("/usr/bin"),
+    Path("/opt/homebrew/bin"),
+    Path("C:/Program Files"),
+    Path("C:/Program Files (x86)"),
+    Path.home(),
+    Path.home() / "Downloads",
+]
+
+
+def _glob_for_stockfish(base: Path, depth: int = 2) -> list[Path]:
+    """Find executable files named stockfish* up to `depth` levels under base."""
+    if not base.is_dir():
+        return []
+    found = []
+    try:
+        for level in range(depth + 1):
+            pattern = "/".join(["*"] * level + ["stockfish*"])
+            for candidate in base.glob(pattern):
+                if candidate.is_file() and os.access(candidate, os.X_OK):
+                    found.append(candidate)
+    except (PermissionError, OSError):
+        pass
+    return found
+
 
 def find_stockfish(explicit: str | None) -> str | None:
     if explicit:
@@ -47,17 +81,10 @@ def find_stockfish(explicit: str | None) -> str | None:
     found = shutil.which("stockfish")
     if found:
         return found
-    # Common install locations this hunt knows about, checked as a fallback
-    # before giving up and asking the player to install it.
-    candidates = [
-        "/usr/local/bin/stockfish",
-        "/usr/bin/stockfish",
-        "/opt/homebrew/bin/stockfish",
-        "C:\\Program Files\\Stockfish\\stockfish.exe",
-    ]
-    for c in candidates:
-        if Path(c).exists():
-            return c
+    for base in _CANDIDATE_DIRS:
+        matches = sorted(_glob_for_stockfish(base), reverse=True)
+        if matches:
+            return str(matches[0])
     return None
 
 
@@ -139,9 +166,10 @@ def main() -> int:
     stockfish_path = find_stockfish(args.stockfish)
     if not stockfish_path:
         print(
-            "Stockfish not found. Pass --stockfish <path>, or install it and ensure it's on PATH.\n"
-            "Once you know the path, it should be remembered in CAPABILITIES.md under User-Provided Tools\n"
-            "so this never has to be re-resolved.",
+            "Stockfish not found via PATH or a quick glob of common install locations.\n"
+            "Ask the player if they already have it installed somewhere and pass --stockfish <path>,\n"
+            "or help them install it if not. Once resolved, remember the path in CAPABILITIES.md under\n"
+            "User-Provided Tools so this is never re-asked.",
             file=sys.stderr,
         )
         return 3

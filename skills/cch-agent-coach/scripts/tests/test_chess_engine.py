@@ -5,7 +5,9 @@
 # ///
 """Unit tests for the deterministic (non-engine) parts of chess_engine.py."""
 
+import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -14,6 +16,12 @@ import chess.engine
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import chess_engine as ce  # noqa: E402
+
+
+def _make_fake_binary(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("#!/bin/sh\necho fake\n")
+    path.chmod(0o755)
 
 
 class TestFindStockfish(unittest.TestCase):
@@ -25,6 +33,40 @@ class TestFindStockfish(unittest.TestCase):
         # it doesn't raise and returns either None or a string.
         result = ce.find_stockfish(None)
         self.assertTrue(result is None or isinstance(result, str))
+
+
+class TestGlobForStockfish(unittest.TestCase):
+    def test_finds_versioned_filename_directly_in_base(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            binary = base / "stockfish-windows-x86-64-avx2.exe"
+            _make_fake_binary(binary)
+            found = ce._glob_for_stockfish(base, depth=0)
+            self.assertEqual([p.name for p in found], [binary.name])
+
+    def test_finds_nested_one_level_down(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            binary = base / "Stockfish 16" / "stockfish-16.1"
+            _make_fake_binary(binary)
+            self.assertEqual(ce._glob_for_stockfish(base, depth=0), [])
+            found = ce._glob_for_stockfish(base, depth=1)
+            self.assertEqual([p.name for p in found], [binary.name])
+
+    def test_missing_base_dir_returns_empty(self):
+        self.assertEqual(ce._glob_for_stockfish(Path("/no/such/directory/at/all"), depth=2), [])
+
+    def test_non_executable_match_excluded_where_permissions_are_enforced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            binary = base / "stockfish-not-executable"
+            binary.write_text("not actually a binary")
+            binary.chmod(0o644)
+            found = ce._glob_for_stockfish(base, depth=0)
+            if os.name != "nt":
+                # Windows' os.access(X_OK) doesn't reflect POSIX exec bits the
+                # same way, so this assertion only holds on POSIX platforms.
+                self.assertEqual(found, [])
 
 
 class TestScoreToCp(unittest.TestCase):
