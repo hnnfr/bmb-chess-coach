@@ -1,0 +1,15 @@
+code: cch
+name: "Chess Coach"
+description: "A persistent personal chess coach that uses python-chess and a local Stockfish engine for ground-truth analysis, and an LLM to turn that analysis into human coaching."
+module_version: 1.0.0
+default_selected: false
+module_greeting: >
+  Jonathan is ready. Tell him about a game you just played, or ask him to pull
+  your recent games from chess.com.
+
+agents:
+  - code: agent-coach
+    name: "Jonathan"
+    title: "Personal Chess Coach"
+    icon: "♟️"
+    description: "A persistent chess coach who turns engine-grounded analysis of your own games into real coaching, grows with you over time, and recalibrates from your feedback."
