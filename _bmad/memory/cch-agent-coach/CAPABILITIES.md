@@ -33,4 +33,4 @@ Prefer crafting your own tools over depending on external ones. A script you wro
 
 ### User-Provided Tools
 
-- **Local Stockfish:** installed at `C:\HNN\Apps\stockfish` — use this installation rather than assuming a bundled/default path.
+- **Local Stockfish:** binary at `C:\HNN\Apps\stockfish\stockfish-windows-x86-64-universal.exe` (not auto-detected by `chess_engine.py` — pass `--stockfish` explicitly with this path every call).

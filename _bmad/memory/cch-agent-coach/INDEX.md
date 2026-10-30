@@ -13,9 +13,13 @@
 ## My Files
 _This section grows as I create organic files. Update it when adding new files._
 
-Expected growth for this domain, created the first time each has real content (not scaffolded empty):
-- `weaknesses.md` — curated, evolving library of recurring patterns/configurations
-- `game-log.md` — index of every game analyzed, with report links
-- `repertoire.md` — opening lines, style notes, opponent-prep findings
+Created:
+- `game-log.md` — index of every game fetched/analyzed, with report links. 26 games fetched for October 2026 (hnn79); 1 analyzed so far (jawzy14, 2026-10-09).
+- `games/` — cached PGNs + analysis JSON + board HTML artifacts, one set per row in `game-log.md`.
+- `weaknesses.md` — curated patterns. One candidate so far: plan-commitment-without-threat-verification.
+- `feedback.md` — calibration notes, curated.
+
+- `repertoire.md` — Black vs 1.e4: shoring up the habitual Philidor (e5/d6), plus a second weapon (2...Nf6, 3...d5!) for aggressive White tries like the Vienna.
+
+Still expected, not yet created (create the first time it has real content):
 - `training-plan.md` — current flexible, self-paced plan state
-- `feedback.md` — calibration notes (curated) over a raw feedback log
